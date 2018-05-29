@@ -47,11 +47,21 @@ class Event:
                                       event['topic_id'] )
 
     def make_relation(event_id, topic_id):
-        def create_relation(tx, event_id, topic_id):
-            tx.run("MATCH (a:Event{event_id:$event_id}),(c:Topic{topic_id:$topic_id}) CREATE (a)-[b:BASED_ON]->(c)",
-                   event_id=event_id, topic_id=topic_id)
-        with driver.session() as session:
-            session.write_transaction(create_relation, event_id, topic_id)
+        for record_topic_id in topic_id:
+
+            def create_relation(tx, event_id, record_topic_id):
+                tx.run("MATCH (a:Event{event_id:$event_id}),(c:Topic{topic_id:$topic_id}) CREATE (a)-[b:BASED_ON]->(c)",
+                       event_id=event_id, topic_id=record_topic_id)
+
+            def checkif_exists(tx, event_id, record_topic_id):
+                temp1 = tx.run("RETURN EXISTS( (:Event {event_id:$event_id})-[:BASED_ON]->(:Topic {topic_id:$topic_id}) )",
+                       event_id=event_id, topic_id=record_topic_id).single().value()
+                if not temp1:
+                    with driver.session() as session:
+                        session.write_transaction(create_relation, event_id, record_topic_id)
+
+            with driver.session() as session:
+                session.write_transaction(checkif_exists, event_id, record_topic_id)
 
     def find_related_topics(event_id):
         def find_relations(tx, event_id):
