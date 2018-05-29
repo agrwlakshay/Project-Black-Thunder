@@ -34,6 +34,6 @@ def _make_relation():
 def _find_related_topics():
     JSON_input = request.get_json()
     event_info = JSON_input["Event"]
-    _related_topics = Event.find_related_topics(event_info["id"])
+    _related_topics = Event.find_related_topics(event_info["event_id"])
 
     return json.dumps(serialize._serialize_topic(_related_topics))

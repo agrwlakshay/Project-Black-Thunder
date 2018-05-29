@@ -1,5 +1,5 @@
 
-class serialize:
+class serialize(object):
     def serialize_topic(topic):
         return {
             'topic_name': topic['topic_name'],
@@ -20,7 +20,7 @@ class serialize:
         }
 
     def _serialize_topic(topic):
-        return ([serialize_topic(record['topic']) for record in topic])
+        return ([serialize.serialize_topic(record['topic']) for record in topic])
 
 class initialize:
     def initialize_event(event):
