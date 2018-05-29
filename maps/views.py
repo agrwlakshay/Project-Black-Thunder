@@ -49,9 +49,5 @@ def _find_related_topics():
     JSON_input = request.get_json()
     event_info = JSON_input["Event"]
     _related_topics = Event.find_related_topics(event_info["id"])
-    temp4 = []
-    #for record in _related_topics:
-    #    temp4.append(record["topic"])
-    #return render_template('template_find_topics.html',output=temp4)
-    temp3 = _serialize_topic(_related_topics)
-    return render_template('template_find_topics.html', output = temp3)
+
+    return _serialize_topic(_related_topics)
