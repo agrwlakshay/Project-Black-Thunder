@@ -1,6 +1,6 @@
-from flask import Flask, request, session, url_for, render_template
+from flask import Flask, request, session, url_for, render_template, json
 from .models import Topic, Event
-from json import dumps, loads
+
 
 def serialize_topic(topic):
     return {
@@ -17,7 +17,7 @@ def serialize_event(event):
     }
 
 def _serialize_topic(topic):
-    return dumps([serialize_topic(record['topic']) for record in topic])
+    return json.dumps([serialize_topic(record['topic']) for record in topic])
 
 #def _serialize_topic(topic):
 #    return [serialize_topic(record['topic']) for record in topic]
@@ -50,7 +50,7 @@ def _find_related_topics():
     event_info = JSON_input["Event"]
     _related_topics = Event.find_related_topics(event_info["id"])
     temp4 = []
-    #for record in _related_topics:             
+    #for record in _related_topics:
     #    temp4.append(record["topic"])
     #return render_template('template_find_topics.html',output=temp4)
     temp3 = _serialize_topic(_related_topics)
